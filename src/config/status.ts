@@ -1,0 +1,21 @@
+export const statusCode : {
+    READ : number,
+    CREATE : number,
+    UPDATE : number,
+    DELETE : number,
+    NOT_FOUND : number,
+    BAD_REQUEST : number,
+    UNAUTHORIZED : number,
+    FORBIDDEN : number,
+    INTERNAL_SERVER_ERROR : number,
+}= {
+    READ : 200,
+    CREATE : 201,
+    UPDATE : 200,
+    DELETE : 204,
+    NOT_FOUND : 404,
+    BAD_REQUEST : 400,
+    UNAUTHORIZED : 401,
+    FORBIDDEN : 403,
+    INTERNAL_SERVER_ERROR : 500,
+};
