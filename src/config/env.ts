@@ -9,6 +9,7 @@ export const configENV : {
     port: string | number;
     corsOrigin: string;
     db: string;
+    api_file_size: string;
     accessTokenSecret: string;
     accessTokenTimeout: string | number;
     refreshTokenSecret: string;
@@ -19,6 +20,9 @@ export const configENV : {
     
     // database connection string
     db: process.env.DATABASE_URL || "",
+
+    // api access file size
+    api_file_size: "26kb",
     
     // jwt settings
     accessTokenSecret: process.env.ACCESS_TOKEN_SECRET || "default_access_secret",
