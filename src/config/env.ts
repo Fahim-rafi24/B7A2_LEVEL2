@@ -10,6 +10,7 @@ export const configENV : {
     corsOrigin: string;
     db: string;
     api_file_size: string;
+    secret_key: string;
     accessTokenSecret: string;
     accessTokenTimeout: string | number;
     refreshTokenSecret: string;
@@ -23,6 +24,7 @@ export const configENV : {
 
     // api access file size
     api_file_size: "26kb",
+    secret_key: process.env.SECRET_KEY || "SECRET_KEY",
     
     // jwt settings
     accessTokenSecret: process.env.ACCESS_TOKEN_SECRET || "default_access_secret",
