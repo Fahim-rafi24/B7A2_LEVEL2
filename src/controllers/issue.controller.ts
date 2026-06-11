@@ -4,21 +4,22 @@ import { AsyncHandler } from "../utils/AsyncHandler";
 import { ApiError } from "../utils/ApiError";
 import { ApiResponse } from "../utils/ApiResponse";
 import { CustomRequest } from "../types/customRequest.type";
+import { statusCode } from "../config/status";
 
 export const createIssue = AsyncHandler(async (req: CustomRequest, res: Response) => {
     const { title, description, type } = req.body;
     const reporter_id = req.user?.id;
 
     if (!title || !description || !type || !reporter_id) {
-        throw new ApiError(400, "Title, description, type and auth are required");
+        throw new ApiError(statusCode.BAD_REQUEST, "Title, description, type and auth are required");
     }
 
     if (description.length < 20) {
-        throw new ApiError(400, "Description must be at least 20 characters");
+        throw new ApiError(statusCode.BAD_REQUEST, "Description must be at least 20 characters");
     }
 
     if (!['bug', 'feature_request'].includes(type)) {
-        throw new ApiError(400, "Invalid issue type");
+        throw new ApiError(statusCode.BAD_REQUEST, "Invalid issue type");
     }
 
     const result = await query(
@@ -26,7 +27,7 @@ export const createIssue = AsyncHandler(async (req: CustomRequest, res: Response
         [title, description, type, reporter_id]
     );
 
-    return res.status(201).json(new ApiResponse(201, result.rows[0], "Issue created successfully"));
+    return res.status(statusCode.CREATE).json(new ApiResponse(statusCode.CREATE, result.rows[0], "Issue created successfully"));
 });
 
 export const getAllIssues = AsyncHandler(async (req: Request, res: Response) => {
@@ -53,7 +54,7 @@ export const getAllIssues = AsyncHandler(async (req: Request, res: Response) => 
         updated_at: row.updated_at
     }));
 
-    return res.status(200).json(new ApiResponse(200, issues, "Issues retrieved successfully"));
+    return res.status(statusCode.READ).json(new ApiResponse(statusCode.READ, issues, "Issues retrieved successfully"));
 });
 
 export const getIssueById = AsyncHandler(async (req: Request, res: Response) => {
@@ -62,7 +63,7 @@ export const getIssueById = AsyncHandler(async (req: Request, res: Response) => 
         [req.params.id]
     );
 
-    if (result.rows.length === 0) throw new ApiError(404, "Issue not found");
+    if (result.rows.length === 0) throw new ApiError(statusCode.NOT_FOUND, "Issue not found");
 
     const row = result.rows[0];
     const issue = {
@@ -76,7 +77,7 @@ export const getIssueById = AsyncHandler(async (req: Request, res: Response) => 
         updated_at: row.updated_at
     };
 
-    return res.status(200).json(new ApiResponse(200, issue, "Issue retrieved successfully"));
+    return res.status(statusCode.READ).json(new ApiResponse(statusCode.READ, issue, "Issue retrieved successfully"));
 });
 
 export const updateIssue = AsyncHandler(async (req: CustomRequest, res: Response) => {
@@ -85,11 +86,11 @@ export const updateIssue = AsyncHandler(async (req: CustomRequest, res: Response
     const user = req.user;
 
     const currentResult = await query("SELECT * FROM issues WHERE id = $1", [id]);
-    if (currentResult.rows.length === 0) throw new ApiError(404, "Issue not found");
+    if (currentResult.rows.length === 0) throw new ApiError(statusCode.NOT_FOUND, "Issue not found");
     const issue = currentResult.rows[0];
 
     if (user?.role !== 'maintainer' && (issue.reporter_id !== user?.id || issue.status !== 'open')) {
-        throw new ApiError(403, "Forbidden: Cannot update this issue");
+        throw new ApiError(statusCode.FORBIDDEN, "Forbidden: Cannot update this issue");
     }
 
     const result = await query(
@@ -97,14 +98,14 @@ export const updateIssue = AsyncHandler(async (req: CustomRequest, res: Response
         [title, description, type, status, id]
     );
 
-    return res.status(200).json(new ApiResponse(200, result.rows[0], "Issue updated successfully"));
+    return res.status(statusCode.UPDATE).json(new ApiResponse(statusCode.UPDATE, result.rows[0], "Issue updated successfully"));
 });
 
 export const deleteIssue = AsyncHandler(async (req: CustomRequest, res: Response) => {
     const { id } = req.params;
     
     const result = await query("DELETE FROM issues WHERE id = $1", [id]);
-    if (result.rowCount === 0) throw new ApiError(404, "Issue not found");
+    if (result.rowCount === 0) throw new ApiError(statusCode.NOT_FOUND, "Issue not found");
 
-    return res.status(200).json(new ApiResponse(200, {}, "Issue deleted successfully"));
+    return res.status(statusCode.DELETE).json(new ApiResponse(statusCode.DELETE, {}, "Issue deleted successfully"));
 });

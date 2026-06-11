@@ -4,12 +4,13 @@ import { configENV } from "../config/env";
 import { ApiError } from "../utils/ApiError";
 import { AsyncHandler } from "../utils/AsyncHandler";
 import { CustomRequest } from "../types/customRequest.type";
+import { statusCode } from "../config/status";
 
 export const verifyJWT = AsyncHandler(async (req: CustomRequest, res: Response, next: NextFunction) => {
     const token = req.cookies?.accessToken;
 
     if (!token) {
-        throw new ApiError(401, "Unauthorized request: No access token found");
+        throw new ApiError(statusCode.UNAUTHORIZED, "Unauthorized request: No access token found");
     }
 
     try {
@@ -18,14 +19,14 @@ export const verifyJWT = AsyncHandler(async (req: CustomRequest, res: Response, 
         next();
     } catch (error) {
         console.error("JWT Verification Error:", error);
-        throw new ApiError(401, "Invalid or expired access token");
+        throw new ApiError(statusCode.UNAUTHORIZED, "Invalid or expired access token");
     }
 });
 
 export const authorizeRole = (roles: string[]) => {
     return (req: CustomRequest, res: Response, next: NextFunction) => {
         if (!req.user || !roles.includes(req.user.role)) {
-            throw new ApiError(403, "Forbidden: Insufficient permissions");
+            throw new ApiError(statusCode.FORBIDDEN, "Forbidden: Insufficient permissions");
         }
         next();
     };

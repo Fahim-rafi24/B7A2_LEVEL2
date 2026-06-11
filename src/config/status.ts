@@ -6,6 +6,7 @@ export const statusCode : {
     NOT_FOUND : number,
     BAD_REQUEST : number,
     UNAUTHORIZED : number,
+    CONFLICT : number,
     FORBIDDEN : number,
     INTERNAL_SERVER_ERROR : number,
 }= {
@@ -17,5 +18,6 @@ export const statusCode : {
     BAD_REQUEST : 400,
     UNAUTHORIZED : 401,
     FORBIDDEN : 403,
+    CONFLICT : 409,
     INTERNAL_SERVER_ERROR : 500,
 };
