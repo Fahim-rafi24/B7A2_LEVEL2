@@ -9,7 +9,7 @@ const port = configENV.port;
 db_pool.connect()
   .then(() => {
     app.listen(port, () => {
-      console.log(`⚙️ Server is running at port : ${port}`);
+      // console.log(`⚙️ Server is running at port : ${port}`);
     });
   })
   .catch((err) => {

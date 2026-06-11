@@ -4,7 +4,6 @@ import { middlewares } from "./middlewares/middlewares";
 // database model import
 import modelInitiation from "./db.model";
 
-
 // app initialization
 const app: Application = express();
 
@@ -14,8 +13,12 @@ middlewares(app);
 // database models initialization
 modelInitiation();
 
-// routes declaration
+// user routes
 import userRouter from "./routes/user/user.routes";
 app.use("/api/auth", userRouter);
+
+// issue routes
+import issueRouter from "./routes/issues/issues.routes";
+app.use("/api/issues", issueRouter);
 
 export { app };
