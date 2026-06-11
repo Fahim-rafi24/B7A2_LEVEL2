@@ -14,4 +14,8 @@ middlewares(app);
 // database models initialization
 modelInitiation();
 
+// routes declaration
+import userRouter from "./routes/user/user.routes";
+app.use("/api/auth", userRouter);
+
 export { app };
