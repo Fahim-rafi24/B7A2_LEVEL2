@@ -13,7 +13,7 @@ export const statusCode : {
     READ : 200,
     CREATE : 201,
     UPDATE : 200,
-    DELETE : 204,
+    DELETE : 200,
     NOT_FOUND : 404,
     BAD_REQUEST : 400,
     UNAUTHORIZED : 401,
